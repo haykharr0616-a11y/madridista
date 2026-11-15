@@ -194,15 +194,11 @@ fetch('./news/news.json')
 
     card.append(title, date, content);
 
-    if (item.link) {
-      const link = document.createElement('a');
-      link.className = 'btn';
-      link.href = `article.html?id=${news.indexOf(item)}`;
-      link.target = '_blank';
-      link.rel = 'noopener noreferrer';
-      link.textContent = 'Կարդալ ավելին';
-      card.appendChild(link);
-    }
+    const link = document.createElement('a');
+link.className = 'btn';
+link.href = `article.html?id=${news.indexOf(item)}`;
+link.textContent = 'Կարդալ ավելին';
+card.appendChild(link);
 
     list.appendChild(card);
   });
