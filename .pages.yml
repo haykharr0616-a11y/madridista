@@ -1,1 +1,15 @@
-ը
+content:
+  - name: news
+    label: Новости
+    path: content/news
+    type: collection
+    fields:
+      - name: title
+        label: Заголовок
+        type: string
+      - name: date
+        label: Дата
+        type: date
+      - name: body
+        label: Текст новости
+        type: text
