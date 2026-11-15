@@ -1,0 +1,93 @@
+
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MADRIDISTA — Հոդված</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #0b1120;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+    .article {
+      max-width: 850px;
+      margin: 30px auto;
+      background: #172033;
+      padding: 25px;
+      border-radius: 16px;
+    }
+    h1 { color: #f5c542; }
+    .date { color: #aaa; }
+    img {
+      width: 100%;
+      border-radius: 12px;
+      margin: 15px 0;
+    }
+    .text {
+      font-size: 18px;
+      line-height: 1.7;
+    }
+    a { color: #f5c542; }
+  </style>
+</head>
+<body>
+
+  <div class="article" id="article">
+    Հոդվածը բեռնվում է...
+  </div>
+
+  <script>
+    const id = new URLSearchParams(location.search).get('id');
+
+    fetch('./news/news.json')
+      .then(response => response.json())
+      .then(news => {
+        const item = news[Number(id)];
+
+        if (!item || !Number.isInteger(Number(id))) {
+          document.getElementById('article').textContent =
+            'Հոդվածը չի գտնվել։';
+          return;
+        }
+
+        const box = document.getElementById('article');
+        box.innerHTML = '';
+
+        const back = document.createElement('a');
+        back.href = 'index.html';
+        back.textContent = '← Վերադառնալ գլխավոր էջ';
+        box.appendChild(back);
+
+        const title = document.createElement('h1');
+        title.textContent = item.title;
+
+        const date = document.createElement('p');
+        date.className = 'date';
+        date.textContent = item.date;
+
+        box.append(title, date);
+
+        if (item.image) {
+          const img = document.createElement('img');
+          img.src = item.image;
+          img.alt = item.title;
+          box.appendChild(img);
+        }
+
+        const content = document.createElement('p');
+        content.className = 'text';
+        content.textContent = item.text;
+        box.appendChild(content);
+      })
+      .catch(() => {
+        document.getElementById('article').textContent =
+          'Չհաջողվեց բեռնել հոդվածը։';
+      });
+  </script>
+
+</body>
+</html>
