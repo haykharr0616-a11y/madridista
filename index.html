@@ -32,6 +32,39 @@ nav a:hover{color:#e3c477}
 .live{background:linear-gradient(120deg,#381a25,#151c2e);border-color:#743b4b}
 footer{text-align:center;padding:28px;color:#8793a7;border-top:1px solid #27364d}
 .small{font-size:12px;color:#8793a7}
+#news-list .card {
+  overflow: hidden;
+  border-radius: 16px;
+  padding: 20px;
+  transition: transform 0.25s ease;
+}
+
+#news-list .card:hover {
+  transform: translateY(-5px);
+}
+
+#news-list .card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 15px;
+}
+
+#news-list .card h3 {
+  color: #f5c542;
+  margin-bottom: 10px;
+}
+
+#news-list .date {
+  color: #aaa;
+  font-size: 13px;
+}
+
+#news-list .btn {
+  display: inline-block;
+  margin-top: 12px;
+}
 </style>
 </head>
 <body>
@@ -86,7 +119,6 @@ footer{text-align:center;padding:28px;color:#8793a7;border-top:1px solid #27364d
 </div>
 </div>
 </section>
-
 <section id="news" style="margin-top:45px">
 <h2 class="section-title">📰 Վերջին նորություններ</h2>
 <div class="grid">
@@ -101,6 +133,7 @@ footer{text-align:center;padding:28px;color:#8793a7;border-top:1px solid #27364d
 </div>
 </div>
 </section>
+
 
 <section id="live" style="margin-top:45px">
 <h2 class="section-title">🔴 LIVE — Ուղիղ հեռարձակում</h2>
@@ -125,37 +158,58 @@ footer{text-align:center;padding:28px;color:#8793a7;border-top:1px solid #27364d
 </footer>
 <script>
 fetch('./news/news.json')
-.then(response => response.json())
+.then(response => {
+  if (!response.ok) throw new Error('News loading failed');
+  return response.json();
+})
 .then(news => {
-const list = document.getElementById('news-list');
-list.innerHTML = '';
+  const list = document.getElementById('news-list');
+  list.innerHTML = '';
 
-if (!news.length) {
-list.textContent = 'Առայժմ նորություններ չկան։';
-return;
-}
+  if (!news.length) {
+    list.textContent = 'Առայժմ նորություններ չկան։';
+    return;
+  }
 
-news.forEach(item => {
-const card = document.createElement('article');
-card.className = 'card';
+  news.forEach(item => {
+    const card = document.createElement('article');
+    card.className = 'card';
 
-const title = document.createElement('h3');
-title.textContent = item.title;
+    if (item.image) {
+      const img = document.createElement('img');
+      img.src = item.image;
+      img.alt = item.title;
+      card.appendChild(img);
+    }
 
-const date = document.createElement('p');
-date.className = 'date';
-date.textContent = item.date;
+    const title = document.createElement('h3');
+    title.textContent = item.title;
 
-const content = document.createElement('p');
-content.textContent = item.text;
+    const date = document.createElement('p');
+    date.className = 'date';
+    date.textContent = item.date;
 
-card.append(title, date, content);
-list.appendChild(card);
-});
+    const content = document.createElement('p');
+    content.textContent = item.text;
+
+    card.append(title, date, content);
+
+    if (item.link) {
+      const link = document.createElement('a');
+      link.className = 'btn';
+      link.href = item.link;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      link.textContent = 'Կարդալ ավելին';
+      card.appendChild(link);
+    }
+
+    list.appendChild(card);
+  });
 })
 .catch(() => {
-document.getElementById('news-list').textContent =
-'Չհաջողվեց բեռնել նորությունները։';
+  document.getElementById('news-list').textContent =
+    'Չհաջողվեց բեռնել նորությունները։';
 });
   </script>
 </body>
